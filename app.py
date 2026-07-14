@@ -71,43 +71,40 @@ if uploaded_file is not None:
     # 4. Build the Graph
     st.success("Data successfully extracted!")
     
-    # Safely calculate the Pace range to prevent Plotly crashing on empty GPS data
-    if df['Pace'].notna().any():
-        pace_max = df['Pace'].max() + 0.5
-        pace_min = max(0, df['Pace'].min() - 0.5)
-        # We put the MAX first and MIN second. This manually reverses the axis!
-        pace_range = [pace_max, pace_min] 
-    else:
-        # Default range if the run had absolutely no speed data recorded
-        pace_range = [15, 0]
-
     fig = go.Figure()
 
-    # Add Pace Line (Blue)
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['Pace'], name='Pace (min/km)', 
-                             yaxis='y1', line=dict(color='#3b82f6', width=2)))
-
-    # Add Temp Line (Orange, dotted)
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['Temp'], name='Temp (°C)', 
-                             yaxis='y2', line=dict(color='#f97316', dash='dot', width=2)))
-
-    # Add HR Line (Red)
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['Heart Rate'], name='Heart Rate (bpm)', 
-                             yaxis='y3', line=dict(color='#ef4444', width=3)))
+    # Add HR Line (Red) with Custom Hover Data
+    fig.add_trace(go.Scatter(
+        x=df['Date'], 
+        y=df['Heart Rate'], 
+        name='Heart Rate (bpm)', 
+        mode='lines',
+        line=dict(color='#ef4444', width=3),
+        customdata=df[['Pace', 'Temp']],
+        hovertemplate=(
+            "<b>Time:</b> %{x}<br>" +
+            "<b>HR:</b> %{y:.0f} bpm<br>" +
+            "<b>Pace:</b> %{customdata[0]:.2f} min/km<br>" +
+            "<b>Temp:</b> %{customdata[1]:.1f} °C<extra></extra>"
+        )
+    ))
 
     # Highlight Anomalies
     anomalies = df[df['Anomaly']]
     if not anomalies.empty:
-        fig.add_trace(go.Scatter(x=anomalies['Date'], y=anomalies['Heart Rate'], mode='markers', 
-                                 name='High HR Anomaly', marker=dict(color='black', size=10, symbol='x'), yaxis='y3'))
+        fig.add_trace(go.Scatter(
+            x=anomalies['Date'], 
+            y=anomalies['Heart Rate'], 
+            mode='markers', 
+            name='High HR Anomaly', 
+            marker=dict(color='black', size=10, symbol='x'), 
+            hoverinfo='skip' # Skips redundant tooltips on the X marks
+        ))
 
-    # Configure the 3 Y-axes
+    # Configure a clean single Y-axis layout
     fig.update_layout(
-        xaxis=dict(domain=[0.1, 0.9]),
-        # Replaced titlefont with title_font
-        yaxis=dict(title='Pace (min/km)', title_font=dict(color='#3b82f6'), tickfont=dict(color='#3b82f6'), range=pace_range),
-        yaxis2=dict(title='Temp (°C)', title_font=dict(color='#f97316'), tickfont=dict(color='#f97316'), anchor='free', overlaying='y', side='left', position=0.0),
-        yaxis3=dict(title='Heart Rate (bpm)', title_font=dict(color='#ef4444'), tickfont=dict(color='#ef4444'), anchor='x', overlaying='y', side='right'),
+        xaxis=dict(title='Time of Run'),
+        yaxis=dict(title='Heart Rate (bpm)', title_font=dict(color='#ef4444'), tickfont=dict(color='#ef4444')),
         height=600,
         hovermode="x unified",
         margin=dict(l=20, r=20, t=40, b=20)
