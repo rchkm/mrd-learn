@@ -104,11 +104,10 @@ if uploaded_file is not None:
     # Configure the 3 Y-axes
     fig.update_layout(
         xaxis=dict(domain=[0.1, 0.9]),
-        # Removed autorange="reversed" and replaced it with our safe manual range
-        yaxis=dict(title='Pace (min/km)', titlefont=dict(color='#3b82f6'), tickfont=dict(color='#3b82f6'), range=pace_range),
-        yaxis2=dict(title='Temp (°C)', titlefont=dict(color='#f97316'), tickfont=dict(color='#f97316'), anchor='free', overlaying='y', side='left', position=0.0),
-        # Explicitly anchored yaxis3 to 'x' to ensure stability
-        yaxis3=dict(title='Heart Rate (bpm)', titlefont=dict(color='#ef4444'), tickfont=dict(color='#ef4444'), anchor='x', overlaying='y', side='right'),
+        # Replaced titlefont with title_font
+        yaxis=dict(title='Pace (min/km)', title_font=dict(color='#3b82f6'), tickfont=dict(color='#3b82f6'), range=pace_range),
+        yaxis2=dict(title='Temp (°C)', title_font=dict(color='#f97316'), tickfont=dict(color='#f97316'), anchor='free', overlaying='y', side='left', position=0.0),
+        yaxis3=dict(title='Heart Rate (bpm)', title_font=dict(color='#ef4444'), tickfont=dict(color='#ef4444'), anchor='x', overlaying='y', side='right'),
         height=600,
         hovermode="x unified",
         margin=dict(l=20, r=20, t=40, b=20)
