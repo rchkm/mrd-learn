@@ -96,7 +96,8 @@ if uploaded_file is not None:
         xaxis=dict(domain=[0.1, 0.9]),
         # Y1 is Pace. We reverse it because a lower number (faster pace) is "better" and should point up!
         yaxis=dict(title='Pace (min/km)', titlefont=dict(color='#3b82f6'), tickfont=dict(color='#3b82f6'), autorange="reversed"),
-        yaxis2=dict(title='Temp (°C)', titlefont=dict(color='#f97316'), tickfont=dict(color='#f97316'), overlaying='y', side='left', position=0.0),
+        # Added anchor='free' here so Plotly allows us to use position=0.0
+        yaxis2=dict(title='Temp (°C)', titlefont=dict(color='#f97316'), tickfont=dict(color='#f97316'), anchor='free', overlaying='y', side='left', position=0.0),
         yaxis3=dict(title='Heart Rate (bpm)', titlefont=dict(color='#ef4444'), tickfont=dict(color='#ef4444'), overlaying='y', side='right'),
         height=600,
         hovermode="x unified",
