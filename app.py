@@ -23,7 +23,7 @@ df['Anomaly'] = df['HR_Z_Score'] > 2
 
 # 3. Build the Dashboard UI
 st.set_page_config(layout="wide")
-st.title("Cardiovascular Drift & Heat Anomaly Tracker")
+st.title("Ujicoba")
 st.write("Visualizing the impact of temperature on easy run heart rates.")
 
 # 4. Create the Multi-Axis Plotly Chart
